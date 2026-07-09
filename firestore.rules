@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 家庭内アプリ向けの簡易ルール。
+    // ログイン機能を持たないため、このアプリが使う3つのコレクションだけ
+    // 誰でも読み書きできるようにしています(URLを知っている家族だけが使う前提)。
+    match /meta/{docId} {
+      allow read, write: if true;
+    }
+    match /index/{docId} {
+      allow read, write: if true;
+    }
+    match /entries/{docId} {
+      allow read, write: if true;
+    }
+    // それ以外のコレクションは一切アクセス不可
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
